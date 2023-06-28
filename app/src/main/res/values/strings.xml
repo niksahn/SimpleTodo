@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleToDo</string>
+    <string name="done">Done</string>
+    <string name="not_done">Not done</string>
+</resources>
