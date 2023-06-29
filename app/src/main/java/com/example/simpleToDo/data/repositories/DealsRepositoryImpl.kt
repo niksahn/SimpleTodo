@@ -1,6 +1,6 @@
 package com.example.simpleToDo.data.repositories
 
-import com.example.simpleToDo.data.models.Deal
+import com.example.simpleToDo.domain.models.Deal
 import com.example.simpleToDo.domain.repositories.DealsRepository
 import javax.inject.Inject
 

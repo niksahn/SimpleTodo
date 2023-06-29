@@ -15,11 +15,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 interface DataModule {
-    @Binds
-    fun bindApiRepository(
+   @Binds
+    fun bindDealsRepository(
         dealsRepositoryImpl: DealsRepositoryImpl,
     ): DealsRepository
 }
@@ -31,7 +31,6 @@ class DataProvidesModule {
     fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
         return FirebaseAnalytics.getInstance(context)
     }
-    
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
@@ -39,4 +38,8 @@ class DataProvidesModule {
             context, AppDatabase::class.java, "SimpleToDo"
         )
             .build()
+    @Provides
+    @Singleton
+    fun providesDealDao(database: AppDatabase) =
+        database.getDealDao()
 }

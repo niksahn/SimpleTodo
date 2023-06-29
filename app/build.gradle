@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.examplet'
+    namespace 'com.example.SimpleToDo'
     compileSdk 33
 
     defaultConfig {
-        minSdk 23
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -21,6 +21,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        applicationId 'com.example.SimpleToDo'
     }
 
     buildTypes {

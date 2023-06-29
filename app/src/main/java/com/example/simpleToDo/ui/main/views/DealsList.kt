@@ -12,7 +12,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.simpleToDo.ui.main.DealsState
+import com.example.simpleToDo.domain.models.Deal
 import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -20,7 +20,7 @@ import kotlinx.collections.immutable.ImmutableList
 fun DealsList(
 	title: String,
 	isOpened: Boolean,
-	listOfDeals: ImmutableList<DealsState>
+	listOfDeals: ImmutableList<Deal>
 ) {
 	Column {
 		ListTitle(title = title, isOpened = isOpened)

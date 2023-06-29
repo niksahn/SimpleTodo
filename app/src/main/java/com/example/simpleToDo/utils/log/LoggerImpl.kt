@@ -13,7 +13,6 @@ class LoggerImpl @Inject constructor(
 
     override fun error(throwable: Throwable) {
         throwable.printStackTrace()
-        //TODO Добавить отправку в Crashlytics
     }
 
     override fun error(message: String) {
@@ -45,6 +44,6 @@ class LoggerImpl @Inject constructor(
         info("Sending event ${event.name} with args ${event.arguments}")
     }
     companion object {
-        const val TAG = "ExampleT"
+        const val TAG = "SimpleToDo"
     }
 }

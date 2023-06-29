@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "1093026778505",
-    "project_id": "examplet-edec8",
-    "storage_bucket": "examplet-edec8.appspot.com"
+    "project_id": "SimpleToDo-edec8",
+    "storage_bucket": "SimpleToDo-edec8.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:1093026778505:android:22ebee8dc004e819782558",
         "android_client_info": {
-          "package_name": "com.example.examplet"
+          "package_name": "com.example.SimpleToDo"
         }
       },
       "oauth_client": [
