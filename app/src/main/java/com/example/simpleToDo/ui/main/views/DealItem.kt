@@ -22,7 +22,7 @@ fun ListItem(
 private fun ListItemPreview() {
 	ListItem(
 		data = Deal(
-			tag = Tag("title"),
+			tag = Tag(0,"title"),
 			description = "subTitle",
 			done = false,
 			date = LocalDate.now(),

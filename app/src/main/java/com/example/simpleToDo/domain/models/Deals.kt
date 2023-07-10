@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 data class Deal(
     val id: Long,
-    val tag: Tag,
+    val tag: Tag?,
     val description: String,
     val date: LocalDate,
     val priority: Long,

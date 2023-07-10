@@ -6,24 +6,27 @@ import com.example.simpleToDo.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val DealsRepository: DealsRepository
+    private val dealsRepository: DealsRepository
 ) : BaseViewModel<ListScreenState, MainScreenEvent>(ListScreenState()) {
 
     init {
         launchViewModelScope {
             launch {
-                val list = DealsRepository.loadListOfCurrentDeals()
-                addItemsToList(list)
+                 dealsRepository.loadListOfCurrentDeals(LocalDate.now()).subscribe {
+                     addItemsToList(it)
+                 }
             }
         }
     }
 
     fun onClickItem(index: Int) {
-        trySendEvent(MainScreenEvent.ShowToast(currentState.listOfDeals[index].tag.name))
+        currentState.listOfDeals[index].tag?.let { MainScreenEvent.ShowToast(it.name) }
+            ?.let { trySendEvent(it) }
     }
 
     fun onBack() {
