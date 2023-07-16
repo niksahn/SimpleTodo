@@ -19,7 +19,7 @@ class DealsRepositoryImpl @Inject constructor(
 ) : DealsRepository {
 	override fun loadListOfCurrentDeals(date: LocalDate): Flow<ImmutableList<Deal>> =
 		combine(
-			dealDao.getCurrentDeals(date),
+			dealDao.getCurrentDealsFlow(date),
 			dealDao.getTagsFlow()
 		) { dealEntities, tagEntities ->
 			dealEntities.map { dealEntity ->
@@ -30,16 +30,14 @@ class DealsRepositoryImpl @Inject constructor(
 			}.sortedBy { it.priority }.toImmutableList()
 		}
 	
-	override suspend fun addTag(tag: Tag) =
-		dealDao.addTag(TagEntity(id = 0, name = tag.name))
+	override suspend fun addTag(tag: String) =
+		dealDao.addTag(TagEntity(id = 0, name = tag))
 	
-	override suspend fun addDeal(deal: Deal) {
-		val tagId = deal.tag?.name?.let { TagEntity(id = 0, name = it) }?.let { dealDao.addTag(it) }
-		dealDao.addDeal(
-			tagId = tagId,
-			description = deal.description,
-			date = deal.date,
-			priority = deal.priority
+	override suspend fun addDeal(tag: String?, description: String, date: LocalDate) {
+		dealDao.addDealTag(
+			tag = tag,
+			description = description,
+			date = date,
 		)
 	}
 	
@@ -52,13 +50,15 @@ class DealsRepositoryImpl @Inject constructor(
 	}
 	
 	override suspend fun changeDeal(deal: Deal) {
-		dealDao.updateDeal(dealEntity = DealEntity(
-			id = deal.id,
-			tagId = deal.tag?.id,
-			description = deal.description,
-			date = deal.date,
-			priority = deal.priority,
-			done = deal.done
-		))
+		dealDao.updateDeal(
+			dealEntity = DealEntity(
+				id = deal.id,
+				tagId = deal.tag?.id,
+				description = deal.description,
+				date = deal.date,
+				priority = deal.priority,
+				done = deal.done
+			)
+		)
 	}
 }

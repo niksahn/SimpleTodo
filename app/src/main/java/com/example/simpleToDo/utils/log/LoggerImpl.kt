@@ -8,7 +8,7 @@ import java.io.Serializable
 import javax.inject.Inject
 
 class LoggerImpl @Inject constructor(
-    private val analytics: FirebaseAnalytics,
+   // private val analytics: FirebaseAnalytics,
 ) : Logger {
 
     override fun error(throwable: Throwable) {
@@ -40,7 +40,7 @@ class LoggerImpl @Inject constructor(
                 }
             }
         }
-        analytics.logEvent(event.name, bundle)
+       // analytics.logEvent(event.name, bundle)
         info("Sending event ${event.name} with args ${event.arguments}")
     }
     companion object {

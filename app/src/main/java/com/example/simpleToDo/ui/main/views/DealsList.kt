@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -20,7 +19,7 @@ import kotlinx.collections.immutable.ImmutableList
 fun DealsList(
 	title: String,
 	isOpened: Boolean,
-	listOfDeals: ImmutableList<Deal>
+	listOfDeals: ImmutableList<Deal?>
 ) {
 	Column {
 		ListTitle(title = title, isOpened = isOpened)
@@ -30,13 +29,15 @@ fun DealsList(
 			contentPadding = PaddingValues(horizontal = 8.dp)
 		) {
 			itemsIndexed(listOfDeals) { index, itemData ->
-				ListItem(
-					modifier = Modifier
-						.fillMaxWidth()
-						.clickable(onClick = {})
-						.animateItemPlacement(),
-					data = itemData
-				)
+				if (itemData != null) {
+					ListItem(
+						modifier = Modifier
+							.fillMaxWidth()
+							.clickable(onClick = {})
+							.animateItemPlacement(),
+						data = itemData
+					)
+				}
 			}
 		}
 	}

@@ -18,11 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.SimpleToDo.R
+import com.example.simpleToDo.R
 import com.example.simpleToDo.ui.main.views.DealsList
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.collections.immutable.toImmutableList
 
 @RootNavGraph(start = true)
 @Destination
@@ -73,12 +74,12 @@ fun ListScreenContent(
 				DealsList(
 					title = stringResource(id = R.string.not_done),
 					isOpened = false,
-					listOfDeals = state.listOfDeals
+					listOfDeals = state.listOfDeals.map { it.takeIf { !it.done } }.toImmutableList()
 				)
 				DealsList(
 					title = stringResource(id = R.string.done),
 					isOpened = false,
-					listOfDeals = state.listOfDeals
+					listOfDeals = state.listOfDeals.map { it.takeIf { it.done } }.toImmutableList()
 				)
 			}
 		}

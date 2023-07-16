@@ -114,7 +114,7 @@ abstract class BaseViewModel<STATE : State, EVENT : Event>(initialState: STATE) 
         this.onStart(onStart)
             .onEach(onEach)
             .onCompletion(onComplete)
-            .flowOn(SupervisorJob() + Dispatchers.IO + exceptionHandler)
+            .flowOn( Dispatchers.IO + exceptionHandler)
             .launchIn(viewModelScope)
 
 }

@@ -8,8 +8,8 @@ import java.time.LocalDate
 
 interface DealsRepository {
 	fun loadListOfCurrentDeals(date: LocalDate): Flow<ImmutableList<Deal>>
-	suspend fun addTag(tag: Tag): Long
-	suspend fun addDeal(deal: Deal)
+	suspend fun addTag(tag: String): Long
+	suspend fun addDeal(tag: String?, description: String, date: LocalDate)
 	suspend fun deleteDeal(id: Long)
 	suspend fun deleteTag(id: Long)
 	suspend fun changeDeal(deal: Deal)

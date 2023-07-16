@@ -13,6 +13,12 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.plus
+import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(ViewModelComponent::class)
@@ -27,10 +33,11 @@ interface DataModule {
 @Module
 @InstallIn(SingletonComponent::class)
 class DataProvidesModule {
-    @Provides
+   /* @Provides
     fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
         return FirebaseAnalytics.getInstance(context)
-    }
+    }*/
+    
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context) =
@@ -42,4 +49,9 @@ class DataProvidesModule {
     @Singleton
     fun providesDealDao(database: AppDatabase) =
         database.getDealDao()
+    
+    @Provides
+    @Singleton
+    fun provideScope() =
+        CoroutineScope(Dispatchers.IO) + SupervisorJob()
 }
