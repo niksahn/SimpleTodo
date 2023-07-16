@@ -95,20 +95,25 @@ abstract class DealDao {
 	
 	@Transaction
 	open suspend fun updateDeal(dealEntity: DealEntity) {
+		val maxPriority =
+			getCurrentDeals(dealEntity.date).map { it.takeIf { it.done == dealEntity.done } }
+				.maxByOrNull { it?.priority ?: 0 }?.priority ?: 0
 		val curPriority = getCurPriority(dealEntity.id)
-		if (curPriority > dealEntity.priority) updateSmallerPriority(
-			dealId = dealEntity.id,
-			dealDate = dealEntity.date,
-			priority = curPriority,
-			targetPriority= dealEntity.priority
-		)
-		else if (getCurPriority(dealEntity.id) < dealEntity.priority) updateBiggerPriority(
-			dealId = dealEntity.id,
-			dealDate = dealEntity.date,
-			priority = curPriority,
-			targetPriority= dealEntity.priority
-		)
-		changeDeal(dealEntity = dealEntity)
+		if (dealEntity.priority < maxPriority) {
+			if (curPriority > dealEntity.priority) updateSmallerPriority(
+				dealId = dealEntity.id,
+				dealDate = dealEntity.date,
+				priority = curPriority,
+				targetPriority = dealEntity.priority
+			)
+			else if (curPriority < dealEntity.priority) updateBiggerPriority(
+				dealId = dealEntity.id,
+				dealDate = dealEntity.date,
+				priority = curPriority,
+				targetPriority = dealEntity.priority
+			)
+			changeDeal(dealEntity = dealEntity)
+		}
 	} // Должен обновлять заметку и приоритеты для остальных
 	
 	@Update

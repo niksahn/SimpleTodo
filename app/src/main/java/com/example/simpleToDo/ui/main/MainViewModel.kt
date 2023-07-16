@@ -1,11 +1,13 @@
 package com.example.simpleToDo.ui.main
 
 import com.example.simpleToDo.domain.models.Deal
+import com.example.simpleToDo.domain.models.Tag
 import com.example.simpleToDo.domain.repositories.DealsRepository
 import com.example.simpleToDo.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -43,6 +45,15 @@ class MainViewModel @Inject constructor(
 					addItemsToList(it)
 					//	}
 				}
+			delay(2000)
+			dealsRepository.changeDeal(	Deal(
+				3,
+				Tag(0, "second"),
+				"2",
+				date = LocalDate.now(),
+				priority = 3,
+				true
+			))
 		}
 		
 	}
