@@ -51,7 +51,7 @@ class MainViewModel @Inject constructor(
 				Tag(0, "second"),
 				"2",
 				date = LocalDate.now(),
-				priority = 3,
+				priority = 1,
 				true
 			))
 		}

@@ -30,6 +30,13 @@ abstract class DealDao {
 	
 	@Query(
 		"""
+			Select * From Deal Where tagId == :tagId
+		"""
+	)
+	abstract fun getDealByTagId(tagId: Long): List<DealEntity>
+	
+	@Query(
+		"""
 		Select * From Tag
 	"""
 	)
@@ -72,6 +79,13 @@ abstract class DealDao {
 		tagId: Long?, description: String, date: LocalDate, priority: Long, done: Boolean
 	)
 	
+	@Transaction
+	open suspend fun deleteDealTag(deal: DealEntity) {
+		if (deal.tagId?.let { getDealByTagId(it).size <= 1 } == true) {
+			deleteTag(deal.tagId)
+		}
+		deleteDeal(deal.id)
+	}
 	
 	@Insert(onConflict = IGNORE)
 	abstract suspend fun addTag(tagEntity: TagEntity): Long
@@ -81,7 +95,7 @@ abstract class DealDao {
             DELETE FROM Deal WHERE id == :id
         """
 	)
-	abstract suspend fun deleteDeal(id: Long)
+	protected abstract suspend fun deleteDeal(id: Long)
 	
 	@Query(
 		"""
@@ -93,13 +107,15 @@ abstract class DealDao {
 	@Update
 	abstract suspend fun changeTag(tagEntity: TagEntity)
 	
+	// Обновляет заметку и приоритеты для остальных, если дело выполнено
+	// и других с этим тэгом нет, удаляет тэг
 	@Transaction
 	open suspend fun updateDeal(dealEntity: DealEntity) {
 		val maxPriority =
 			getCurrentDeals(dealEntity.date).map { it.takeIf { it.done == dealEntity.done } }
-				.maxByOrNull { it?.priority ?: 0 }?.priority ?: 0
+				.maxByOrNull { it?.priority ?: 0 }?.priority ?: 1
 		val curPriority = getCurPriority(dealEntity.id)
-		if (dealEntity.priority < maxPriority) {
+		if (dealEntity.priority <= maxPriority) {
 			if (curPriority > dealEntity.priority) updateSmallerPriority(
 				dealId = dealEntity.id,
 				dealDate = dealEntity.date,
@@ -112,9 +128,14 @@ abstract class DealDao {
 				priority = curPriority,
 				targetPriority = dealEntity.priority
 			)
+			if (dealEntity.done) {
+				if (dealEntity.tagId?.let { getDealByTagId(it).size <= 1 } == true) {
+					deleteTag(dealEntity.tagId)
+				}
+			}
 			changeDeal(dealEntity = dealEntity)
 		}
-	} // Должен обновлять заметку и приоритеты для остальных
+	}
 	
 	@Update
 	protected abstract suspend fun changeDeal(dealEntity: DealEntity)

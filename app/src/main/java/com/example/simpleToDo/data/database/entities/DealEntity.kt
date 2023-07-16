@@ -23,11 +23,21 @@ data class DealEntity(
 	@ColumnInfo("done")
 	val done: Boolean
 )
-fun DealEntity.toDeal(tag: Tag?)= Deal(
+
+fun DealEntity.toDeal(tag: Tag?) = Deal(
 	id = id,
 	date = date,
 	description = description,
 	priority = priority,
 	done = done,
 	tag = tag
+)
+
+fun Deal.toDealEntity() = DealEntity(
+	id = id,
+	tagId = tag?.id,
+	description = description,
+	date = date,
+	priority = priority,
+	done = done
 )

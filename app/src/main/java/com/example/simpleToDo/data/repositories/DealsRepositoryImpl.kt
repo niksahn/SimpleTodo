@@ -1,9 +1,9 @@
 package com.example.simpleToDo.data.repositories
 
 import com.example.simpleToDo.data.database.dao.DealDao
-import com.example.simpleToDo.data.database.entities.DealEntity
 import com.example.simpleToDo.data.database.entities.TagEntity
 import com.example.simpleToDo.data.database.entities.toDeal
+import com.example.simpleToDo.data.database.entities.toDealEntity
 import com.example.simpleToDo.domain.models.Deal
 import com.example.simpleToDo.domain.models.Tag
 import com.example.simpleToDo.domain.repositories.DealsRepository
@@ -41,8 +41,10 @@ class DealsRepositoryImpl @Inject constructor(
 		)
 	}
 	
-	override suspend fun deleteDeal(id: Long) {
-		dealDao.deleteDeal(id)
+	override suspend fun deleteDeal(deal: Deal) {
+		dealDao.deleteDealTag(
+			deal.toDealEntity()
+		)
 	}
 	
 	override suspend fun deleteTag(id: Long) {
@@ -51,14 +53,7 @@ class DealsRepositoryImpl @Inject constructor(
 	
 	override suspend fun changeDeal(deal: Deal) {
 		dealDao.updateDeal(
-			dealEntity = DealEntity(
-				id = deal.id,
-				tagId = deal.tag?.id,
-				description = deal.description,
-				date = deal.date,
-				priority = deal.priority,
-				done = deal.done
-			)
+			deal.toDealEntity()
 		)
 	}
 }
