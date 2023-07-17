@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.simpleToDo.domain.models.Deal
-import com.example.simpleToDo.domain.models.Tag
 import java.time.LocalDate
 
 @Entity("Deal")
@@ -24,18 +23,9 @@ data class DealEntity(
 	val done: Boolean
 )
 
-fun DealEntity.toDeal(tag: Tag?) = Deal(
+fun DealEntity.toDeal() = Deal(
 	id = id,
-	date = date,
-	description = description,
-	priority = priority,
-	done = done,
-	tag = tag
-)
-
-fun Deal.toDealEntity() = DealEntity(
-	id = id,
-	tagId = tag?.id,
+	tagId = tagId,
 	description = description,
 	date = date,
 	priority = priority,

@@ -8,14 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.example.simpleToDo.domain.models.Deal
 import com.example.simpleToDo.domain.models.Tag
+import com.example.simpleToDo.ui.models.DealUi
 import java.time.LocalDate
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ListItem(
-	data: Deal,
+	data: DealUi,
 	modifier: Modifier = Modifier
 ) {
 	Spacer(modifier = Modifier.height(20.dp))
@@ -26,8 +26,8 @@ fun ListItem(
 @Composable
 private fun ListItemPreview() {
 	ListItem(
-		data = Deal(
-			tag = Tag(0,"title"),
+		data = DealUi(
+			tag = Tag(0, "title"),
 			description = "subTitle",
 			done = false,
 			date = LocalDate.now(),

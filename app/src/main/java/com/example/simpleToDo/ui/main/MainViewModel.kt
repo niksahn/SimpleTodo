@@ -1,21 +1,21 @@
 package com.example.simpleToDo.ui.main
 
-import com.example.simpleToDo.domain.models.Deal
-import com.example.simpleToDo.domain.models.Tag
 import com.example.simpleToDo.domain.repositories.DealsRepository
+import com.example.simpleToDo.domain.usecases.GetDealUseCase
+import com.example.simpleToDo.ui.models.DealUi
 import com.example.simpleToDo.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.coroutines.Job
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.delay
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-	private val dealsRepository: DealsRepository
+	private val dealsRepository: DealsRepository,
+	private val getDealUseCase: GetDealUseCase
 ) : BaseViewModel<ListScreenState, MainScreenEvent>(ListScreenState()) {
-	var dealsJob: Job? = null
 	
 	init {
 		/*
@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(
 		/*dealsRepository.changeDeal(
 				Deal(
 					3,
-					Tag(0, "second"),
+					0,
 					"2",
 					date = LocalDate.now(),
 					priority = 3,
@@ -38,22 +38,11 @@ class MainViewModel @Inject constructor(
 				)
 			)*/
 		launchViewModelScope {
-			dealsRepository.loadListOfCurrentDeals(LocalDate.now())
+			getDealUseCase.run(LocalDate.now())
 				.subscribe() {
-					//	dealsJob?.cancel()
-					//	dealsJob = launchViewModelScope {
-					addItemsToList(it)
-					//	}
+					addItemsToList(it.toImmutableList())
 				}
 			delay(2000)
-			dealsRepository.changeDeal(	Deal(
-				3,
-				Tag(0, "second"),
-				"2",
-				date = LocalDate.now(),
-				priority = 1,
-				true
-			))
 		}
 		
 	}
@@ -67,7 +56,7 @@ class MainViewModel @Inject constructor(
 		trySendEvent(MainScreenEvent.GoBack)
 	}
 	
-	private fun addItemsToList(list: ImmutableList<Deal>) {
+	private fun addItemsToList(list: ImmutableList<DealUi>) {
 		updateState {
 			it.copy(
 				listOfDeals = list,

@@ -70,16 +70,20 @@ fun ListScreenContent(
 		if (state.isLoading) {
 			CircularProgressIndicator()
 		} else {
-			Column(modifier = Modifier.padding(it).fillMaxSize()) {
+			Column(
+				modifier = Modifier
+					.padding(it)
+					.fillMaxSize()
+			) {
 				DealsList(
 					title = stringResource(id = R.string.not_done),
 					isOpened = false,
-					listOfDeals = state.listOfDeals.map { it.takeIf { !it.done } }.toImmutableList()
+					listOfDeals = state.listOfDeals.filter { !it.done }.toImmutableList()
 				)
 				DealsList(
 					title = stringResource(id = R.string.done),
 					isOpened = false,
-					listOfDeals = state.listOfDeals.map { it.takeIf { it.done } }.toImmutableList()
+					listOfDeals = state.listOfDeals.filter { it.done }.toImmutableList()
 				)
 			}
 		}
