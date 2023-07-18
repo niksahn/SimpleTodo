@@ -14,21 +14,21 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            SimpleToDoTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    DestinationsNavHost(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        navGraph = NavGraphs.root
-                    )
-                }
-            }
-        }
-    }
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		setContent {
+			SimpleToDoTheme {
+				Surface(
+					modifier = Modifier.fillMaxSize(),
+					color = MaterialTheme.colors.background
+				) {
+					DestinationsNavHost(
+						modifier = Modifier
+							.fillMaxSize(),
+						navGraph = NavGraphs.root
+					)
+				}
+			}
+		}
+	}
 }

@@ -10,7 +10,7 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 @Module
 interface UtilsModule {
-
-    @Binds
-    fun bindLogger(loggerImpl: LoggerImpl): Logger
+	
+	@Binds
+	fun bindLogger(loggerImpl: LoggerImpl): Logger
 }

@@ -10,10 +10,10 @@ import androidx.compose.ui.unit.Dp
 
 @Composable
 fun RowScope.Spacer(size: Dp) {
-    androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(size))
+	androidx.compose.foundation.layout.Spacer(modifier = Modifier.width(size))
 }
 
 @Composable
 fun ColumnScope.Spacer(size: Dp) {
-    androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(size))
+	androidx.compose.foundation.layout.Spacer(modifier = Modifier.height(size))
 }
