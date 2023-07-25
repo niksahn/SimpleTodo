@@ -12,6 +12,14 @@ interface DealsRepository {
 	suspend fun addDeal(tag: String?, description: String, date: LocalDate)
 	suspend fun deleteDeal(deal: Deal)
 	suspend fun deleteTag(id: Long)
-	suspend fun changeDeal(deal: Deal)
+	suspend fun changeDeal(
+		id: Long,
+		tagId: Long? = null,
+		description: String? = null,
+		date: LocalDate? = null,
+		priority: Long? = null,
+		done: Boolean? = null
+	)
+	
 	suspend fun changeTag(tag: Tag)
 }

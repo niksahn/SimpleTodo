@@ -7,7 +7,6 @@ import com.example.simpleToDo.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.delay
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -26,8 +25,9 @@ class MainViewModel @Inject constructor(
 				date = LocalDate.now(),
 			)
 		}
-		*/
-		/*dealsRepository.changeDeal(
+		dealsRepository.changeDeal(id = 7, date = LocalDate.now().minusDays(1))
+
+		dealsRepository.changeDeal(
 				Deal(
 					3,
 					0,
@@ -36,13 +36,13 @@ class MainViewModel @Inject constructor(
 					priority = 3,
 					false
 				)
-			)*/
+			)
+		*/
 		launchViewModelScope {
 			getDealUseCase.run(LocalDate.now())
 				.subscribe() {
 					addItemsToList(it.toImmutableList())
 				}
-			delay(2000)
 		}
 		
 	}

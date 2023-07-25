@@ -18,7 +18,7 @@ data class DealEntity(
 	@ColumnInfo("date")
 	val date: LocalDate,
 	@ColumnInfo("priority")
-	val priority: Long,
+	var priority: Long,
 	@ColumnInfo("done")
 	val done: Boolean
 )

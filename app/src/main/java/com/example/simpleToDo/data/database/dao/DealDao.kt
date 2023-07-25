@@ -60,10 +60,10 @@ abstract class DealDao {
 	
 	@Query(
 		"""
-			Select priority  From Deal where id=:dealId
+			Select *  From Deal where id=:dealId
 		"""
 	)
-	abstract suspend fun getCurPriority(dealId: Long): Long
+	abstract suspend fun getCurDeal(dealId: Long): DealEntity
 	
 	@Query(
 		"""

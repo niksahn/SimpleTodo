@@ -4,11 +4,11 @@ import androidx.room.withTransaction
 import com.example.simpleToDo.data.database.AppDatabase
 import com.example.simpleToDo.data.database.dao.DealDao
 import com.example.simpleToDo.data.database.dao.TagDao
+import com.example.simpleToDo.data.database.entities.DealEntity
 import com.example.simpleToDo.data.database.entities.TagEntity
 import com.example.simpleToDo.data.database.entities.toDeal
 import com.example.simpleToDo.domain.models.Deal
 import com.example.simpleToDo.domain.models.Tag
-import com.example.simpleToDo.domain.models.toDealEntity
 import com.example.simpleToDo.domain.repositories.DealsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -65,32 +65,88 @@ class DealsRepositoryImpl @Inject constructor(
 		tagDao.changeTag(TagEntity(id = tag.id, name = tag.name))
 	}
 	
-	override suspend fun changeDeal(deal: Deal) {
+	suspend fun changePriorityDeal(
+		targetPriority: Long? = null,
+		curPriority: Long,
+		date: LocalDate,
+		done: Boolean,
+		id: Long
+	) {
+		val maxPriority =
+			dealDao.getCurrentDeals(date).filter { it.done == done }
+				.maxByOrNull { it.priority }?.priority ?: 1
+		var tPriority = targetPriority ?: maxPriority + 1
+		if (curPriority <= maxPriority) {
+			if (curPriority > tPriority) dealDao.updateSmallerPriority(
+				dealId = id,
+				dealDate = date,
+				priority = curPriority,
+				targetPriority = tPriority
+			)
+			else if (curPriority < tPriority) dealDao.updateBiggerPriority(
+				dealId = id,
+				dealDate = date,
+				priority = curPriority,
+				targetPriority = tPriority
+			)
+		}
+	}
+	
+	override suspend fun changeDeal(
+		id: Long,
+		tagId: Long?,
+		description: String?,
+		date: LocalDate?,
+		priority: Long?,
+		done: Boolean?
+	) {
 		db.withTransaction {
-			val maxPriority =
-				dealDao.getCurrentDeals(deal.date).filter { it.done == deal.done }
-					.maxByOrNull { it.priority }?.priority ?: 1
-			val curPriority = dealDao.getCurPriority(deal.id)
-			if (deal.priority <= maxPriority) {
-				if (curPriority > deal.priority) dealDao.updateSmallerPriority(
-					dealId = deal.id,
-					dealDate = deal.date,
-					priority = curPriority,
-					targetPriority = deal.priority
+			val curDeal = dealDao.getCurDeal(id)
+			priority.takeIf { date == null }?.let {
+				changePriorityDeal(
+					targetPriority = it,
+					curPriority = curDeal.priority,
+					done = curDeal.done,
+					date = curDeal.date,
+					id = curDeal.id
 				)
-				else if (curPriority < deal.priority) dealDao.updateBiggerPriority(
-					dealId = deal.id,
-					dealDate = deal.date,
-					priority = curPriority,
-					targetPriority = deal.priority
-				)
-				if (deal.done) {
-					if (deal.tagId?.let { dealDao.getDealByTagId(it).size <= 1 } == true) {
-						deleteTag(deal.id)
+			}
+			done?.let {
+				if (it) {
+					if (curDeal.tagId?.let { dealDao.getDealByTagId(it).size <= 1 } == true) {
+						deleteTag(id)
 					}
 				}
-				dealDao.changeDeal(deal.toDealEntity())
 			}
+			tagId?.let {
+				if (it != curDeal.tagId) {
+					if (curDeal.tagId?.let { dealDao.getDealByTagId(it).size <= 1 } == true) {
+						deleteTag(id)
+					}
+				}
+			}
+			date?.let {
+				changePriorityDeal(
+					curPriority = curDeal.priority,
+					done = curDeal.done,
+					date = curDeal.date,
+					id = curDeal.id
+				)
+				val maxPriority =
+					dealDao.getCurrentDeals(it).filter { it.done == done }
+						.maxByOrNull { it.priority }?.priority ?: 0
+				curDeal.priority = maxPriority + 1
+			}
+			dealDao.changeDeal(
+				DealEntity(
+					id = id,
+					tagId = tagId ?: curDeal.tagId,
+					description = description ?: curDeal.description,
+					date = date ?: curDeal.date,
+					priority = priority.takeIf { date == null } ?: curDeal.priority,
+					done = done.takeIf { ((priority == null) and (date == null)) } ?: curDeal.done
+				)
+			)
 		}
 	}
 }
