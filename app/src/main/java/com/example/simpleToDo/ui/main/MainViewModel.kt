@@ -3,18 +3,32 @@ package com.example.simpleToDo.ui.main
 import com.example.simpleToDo.domain.repositories.DealsRepository
 import com.example.simpleToDo.domain.usecases.GetDealUseCase
 import com.example.simpleToDo.ui.models.DealUi
+import com.example.simpleToDo.ui.utils.getWeek
 import com.example.simpleToDo.utils.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Job
 import java.time.LocalDate
 import javax.inject.Inject
+
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
 	private val dealsRepository: DealsRepository,
 	private val getDealUseCase: GetDealUseCase
 ) : BaseViewModel<ListScreenState, MainScreenEvent>(ListScreenState()) {
+	
+	var flowJob: Job? = null
+	
+	private fun subscribeToDealFlow() {
+		launchViewModelScope {
+			flowJob = getDealUseCase.run(currentState.selectedDay)
+				.subscribe() {
+					addItemsToList(it.toImmutableList())
+				}
+		}
+	}
 	
 	init {
 		/*
@@ -26,30 +40,20 @@ class MainViewModel @Inject constructor(
 			)
 		}
 		dealsRepository.changeDeal(id = 7, date = LocalDate.now().minusDays(1))
-
-		dealsRepository.changeDeal(
-				Deal(
-					3,
-					0,
-					"2",
-					date = LocalDate.now(),
-					priority = 3,
-					false
-				)
-			)
 		*/
-		launchViewModelScope {
-			getDealUseCase.run(LocalDate.now())
-				.subscribe() {
-					addItemsToList(it.toImmutableList())
-				}
-		}
-		
+		updateState { it.copy(listOfDays = it.selectedDay.getWeek().toImmutableList()) }
+		subscribeToDealFlow()
 	}
 	
 	fun onClickItem(index: Int) {
 		currentState.listOfDeals[index].tag?.let { MainScreenEvent.ShowToast(it.name) }
 			?.let { trySendEvent(it) }
+	}
+	
+	fun onDayClick(date: LocalDate) {
+		updateState { it.copy(selectedDay = date) }
+		flowJob?.cancel()
+		subscribeToDealFlow()
 	}
 	
 	fun onBack() {

@@ -2,4 +2,11 @@
     <string name="app_name">SimpleToDo</string>
     <string name="done">Done</string>
     <string name="not_done">Not done</string>
+    <string name="shortMonday">mon</string>
+    <string name="shortTuesday">tue</string>
+    <string name="shortWednesday">wed</string>
+    <string name="shortThursday">thu</string>
+    <string name="shortFriday">fri</string>
+    <string name="shortSaturday">sat</string>
+    <string name="shortSunday">sun</string>
 </resources>

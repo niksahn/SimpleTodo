@@ -4,11 +4,12 @@ import com.example.simpleToDo.ui.models.DealUi
 import com.example.simpleToDo.utils.base.State
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import java.util.Date
+import java.time.LocalDate
 
 data class ListScreenState(
 	val listOfDeals: ImmutableList<DealUi> = persistentListOf(),
-	val listOfDays: ImmutableList<Date> = persistentListOf(),
+	val selectedDay: LocalDate = LocalDate.now(),
+	val listOfDays: ImmutableList<LocalDate> = persistentListOf(),
 	val isLoading: Boolean = true
 ) : State()
 
